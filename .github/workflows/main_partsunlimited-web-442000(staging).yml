@@ -4,30 +4,27 @@
 name: Build and deploy ASP.Net Core app to Azure Web App - partsunlimited-web-442000(staging)
 
 on:
-  push:
+push:
     branches:
-      - main
-  workflow_dispatch:
+    - main
+workflow_dispatch:
 
 jobs:
-  build:
+build-and-deploy:
     runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@master
 
     - name: Set up .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
+    uses: actions/setup-dotnet@v1
+    with:
         dotnet-version: '2.2.207'
-        include-prerelease: true
-
     - name: Build with dotnet
-      run: dotnet build PartsUnlimited.sln --configuration Release
+    run: dotnet build PartsUnlimited.sln --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish src/PartsUnlimitedWebsite/PartsUnlimitedWebsite.cspro -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
+    run: dotnet publish src/PartsUnlimitedWebsite/PartsUnlimitedWebsite.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
